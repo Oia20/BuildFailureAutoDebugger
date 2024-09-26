@@ -42,6 +42,8 @@ build image: ```docker build -t username/autodebugger:latest .```
 
 push image to dockerhub: ```docker push username/autodebugger:latest```
 
+Then you can host the image whereever you like to host your containers :)
+
 
 ## Future improvements I would make with more time.
 
