@@ -1,6 +1,9 @@
 # Automatic Build Error Debugging with AI (greptile) assistance.
 This project uses Greptile to automatically debug build errors whenever they occur.
 
+## Use case
+Codebase context can be very important for solving build errors, so I thought this was the perfect place to implement the Greptile API.
+
 ## How it works
 1. The developer adds this step to their github action workflow, this step sends a post request with their credentials and repo to the server.
 ```yaml
