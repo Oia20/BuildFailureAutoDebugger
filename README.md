@@ -34,7 +34,9 @@ They need to add these to their github repo secrets. You can find this in the re
 After you have the app on your local machine, and have configured your env variables, you can self host the server via docker using the dockerfile in the repo.
 
 clone the repo: ```git clone https://github.com/Oia20/BuildFailureAutoDebugger.git```
+
 build image: ```docker build -t username/autodebugger:latest .```
+
 push image to dockerhub: ```docker push username/autodebugger:latest```
 
 
