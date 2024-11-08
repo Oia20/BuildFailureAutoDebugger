@@ -1,62 +1,108 @@
-# Automatic Build Error Debugging with AI (greptile) assistance.
-This project uses Greptile to automatically debug build errors whenever they occur.
+# Build Error Auto-Debugger 🔍
 
-## Use case
-Codebase context can be very important for solving build errors, so I thought this was the perfect place to implement the Greptile API.
+Automatically debug CI/CD build failures using AI-powered analysis through the Greptile API. Get instant, context-aware solutions delivered directly to your webhook endpoint.
 
-## How it works
-1. The developer adds this step to their github action workflow, this step sends a post request with their credentials and repo to the server.
+## Features ✨
+
+- 🤖 Automatic error analysis using Greptile AI
+- 📊 Full build context consideration for accurate debugging
+- 🔄 Seamless GitHub Actions integration
+- 🎯 Real-time notifications via webhooks
+- 🐳 Easy deployment with Docker
+
+## Quick Start 🚀
+
+### 1. Configure GitHub Secrets
+
+Add the following secrets to your repository:
+- Go to Repository Settings → Secrets and Variables → Actions → Manage Environment Secrets
+- Add these required secrets:
+  - `GREPTILE_KEY`: Your Greptile API key
+  - `WEBHOOK_URL`: Your webhook endpoint for receiving debug responses
+  - Note: `GITHUB_TOKEN` is automatically provided by GitHub Actions
+
+### 2. Add to Your Workflow
+
+Add this step to your GitHub Actions workflow file:
+
 ```yaml
-      if: failure()
-        run: |
-          curl -X POST https://serverURL.com/debugger \
-          -H "Content-Type: application/json" \
-          -d '{
-            "logUrl": "'"/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}"'",
-            "status": "failure",
-            "repo": "'"${{ github.repository }}"'",
-            "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
-            "githubToken": "'"${{ github.token }}"'",
-            "webhookUrl": "'"${{ secrets.WEBHOOK_URL }}"'"
-          }'
+- name: Debug Build Failure
+  if: failure()
+  run: |
+    curl -X POST https://serverURL.com/debugger \
+    -H "Content-Type: application/json" \
+    -d '{
+      "logUrl": "'"/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}"'",
+      "status": "failure",
+      "repo": "'"${{ github.repository }}"'",
+      "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
+      "githubToken": "'"${{ github.token }}"'",
+      "webhookUrl": "'"${{ secrets.WEBHOOK_URL }}"'"
+    }'
 ```
 
-They can copy the entire step and paste it into their workflow file. 
-The only things they would need to change are the server URL, greptile key, github token, and webhook URL.
-They need to add these to their github repo secrets. You can find this in the repo settings > secrets and variables > actions > manage env secrets.
+## Self-Hosting Guide 🏠
 
-2. The server retrieves the build logs from the github API which I accomplished by downloading the logs (Github doesn't have an API for just viewing the logs, only downloading.)
+### Prerequisites
+- Docker installed on your machine
+- Access to a container hosting platform
 
-3. The server sends the Build logs with the error to the greptile API. 
+### Deployment Steps
 
-4. We send greptiles response of how to fix the error to the webhook URL.
+1. Clone the repository:
+```bash
+git clone https://github.com/Oia20/BuildFailureAutoDebugger.git
+```
 
+2. Build the Docker image:
+```bash
+docker build -t username/autodebugger:latest .
+```
 
-## Self hosting the server via docker
+3. Push to Docker Hub:
+```bash
+docker push username/autodebugger:latest
+```
 
-After you have the app on your local machine, and have configured your env variables, you can self host the server via docker using the dockerfile in the repo.
+4. Deploy the container on your preferred hosting platform
 
-clone the repo: ```git clone https://github.com/Oia20/BuildFailureAutoDebugger.git```
+## How It Works 🛠
 
-build image: ```docker build -t username/autodebugger:latest .```
+1. **Trigger**: When a build fails, the GitHub Action automatically triggers the debugger
+2. **Log Collection**: The server fetches complete build logs via GitHub's API
+3. **Analysis**: Logs are processed through Greptile's AI for intelligent error analysis
+4. **Notification**: Debug solutions are sent to your specified webhook endpoint
 
-push image to dockerhub: ```docker push username/autodebugger:latest```
+## Roadmap 🗺️
 
-Then you can host the image whereever you like to host your containers :)
+Future improvements planned for the project:
 
+1. **GitHub App Integration** 
+   - Eliminate the need for workflow file modifications
+   - Streamlined setup process
 
-## Future improvements I would make with more time.
+2. **Enhanced UI/UX**
+   - Dedicated dashboard for error analysis
+   - Interactive debugging interface
 
+3. **Extended Notifications**
+   - Multi-channel support:
+     - Slack
+     - Email
+     - Discord
+     - Ticketing systems
 
-This was a quick(ish) project, so if I were to put more time into it I would make some of the following improvements:
-1. I would release an official github app, this could eliminate the need for the user to add anything to their workflow file.
+4. **Technical Improvements**
+   - TypeScript implementation for better type safety
+   - Automatic repository indexing
+   - Support for additional CI/CD platforms
 
-2. I would integrate the response into an independent UI instead of sending the responses to discord. 
+## Contributing 🤝
 
-3. Possibly add many options for where you want to recieve the response, slack, email, discord, etc, ticketing system, etc.
+Contributions are welcome! Feel free to open issues or submit pull requests to continue this project!
 
-4. Type safety for better maintainability.
+---
 
-5. Automatically index the repo for every build.
+⭐ If you find this project helpful, please consider giving it a star!
 
-6. Support for other CI/CD tools.
+For questions or support, please [open an issue](https://github.com/Oia20/BuildFailureAutoDebugger/issues).
